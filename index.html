@@ -1,1 +1,798 @@
+<!DOCTYPE html>
 
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="TRAIN.">
+<meta name="theme-color" content="#0A0A0F">
+<title>TRAIN.</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#0A0A0F;color:#F2F2F8;font-family:'Courier New',monospace;min-height:100vh;padding-bottom:90px}
+input,textarea,button{font-family:'Courier New',monospace;-webkit-appearance:none;appearance:none}
+input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+#app{max-width:480px;margin:0 auto}
+.hdr{padding:28px 18px 18px;border-bottom:1px solid #252535}
+.badge{display:inline-block;border:1px solid #C8FF5750;color:#C8FF57;font-size:9px;letter-spacing:3px;text-transform:uppercase;padding:3px 8px;margin-bottom:8px;border-radius:2px}
+.ttl{font-size:44px;line-height:1;font-weight:700;letter-spacing:2px;color:#F2F2F8}
+.ttl-dot{color:#C8FF57}
+.sub{font-size:9px;color:#6B6B88;letter-spacing:3px;margin-top:4px;text-transform:uppercase}
+.tabbar{display:flex;border-bottom:1px solid #252535;position:sticky;top:0;background:#0A0A0F;z-index:9}
+.tabbtn{flex:1;padding:13px 2px;font-size:9px;letter-spacing:2px;text-transform:uppercase;background:none;border:none;border-bottom:2px solid transparent;color:#6B6B88;cursor:pointer}
+.tabbtn.active{border-bottom:2px solid #C8FF57;color:#C8FF57}
+.section{padding:18px;display:none}
+.section.active{display:block}
+.lbl{display:block;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#6B6B88;margin-bottom:7px;margin-top:14px}
+.daytoggle{display:flex;gap:8px;margin-bottom:16px}
+.daybtn{flex:1;padding:11px 0;font-size:9px;letter-spacing:3px;text-transform:uppercase;border:1px solid #252535;background:transparent;color:#6B6B88;cursor:pointer;border-radius:2px}
+.daybtn.active{border-color:#C8FF57;background:#C8FF57;color:#0A0A0F;font-weight:700}
+.card{background:#1A1A24;border:1px solid #252535;padding:14px;margin-bottom:10px;border-radius:3px}
+.ex-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.ex-name{font-size:13px;font-weight:700;margin-bottom:2px}
+.ex-meta{font-size:9px;color:#6B6B88;letter-spacing:2px;text-transform:uppercase;margin-bottom:3px}
+.ex-rpe{font-size:10px;color:#C8FF57;font-style:italic}
+.best-box{text-align:right;flex-shrink:0;margin-left:8px}
+.best-lbl{font-size:8px;color:#6B6B88;letter-spacing:2px}
+.best-val{font-size:20px;font-weight:700;color:#C8FF57;line-height:1}
+.setrow{display:flex;gap:8px;margin-bottom:7px;align-items:center}
+.setnum{font-size:9px;color:#6B6B88;width:22px;flex-shrink:0}
+.inp{background:#0D0D0D;border:1px solid #252535;color:#F2F2F8;padding:9px 10px;font-size:14px;flex:1;outline:none;border-radius:2px;min-width:0}
+.fincard{background:#0D0D14;border:1px solid #C8FF5740;padding:14px;margin-bottom:10px;border-radius:3px}
+.fin-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px}
+.fin-title{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:#C8FF57}
+.fin-meta{font-size:9px;color:#6B6B88;line-height:1.7;text-align:right}
+.finex{background:#0A0A0F;border:1px solid #252535;padding:11px;margin-bottom:8px;border-radius:2px}
+.finex-name{font-size:12px;font-weight:700;margin-bottom:2px}
+.finex-detail{font-size:10px;color:#6B6B88;margin-bottom:8px}
+.finrow{display:flex;gap:8px}
+.fincheck{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:11px;letter-spacing:1px}
+.fincheck input[type=checkbox]{-webkit-appearance:checkbox;appearance:checkbox;width:18px;height:18px;accent-color:#C8FF57;flex-shrink:0;cursor:pointer}
+.btn-primary{width:100%;padding:14px 0;background:#C8FF57;color:#0A0A0F;font-size:10px;letter-spacing:4px;text-transform:uppercase;border:none;cursor:pointer;font-weight:700;margin-top:10px;border-radius:2px}
+.btn-blue{width:100%;padding:11px 0;background:transparent;color:#57B8FF;font-size:10px;letter-spacing:3px;text-transform:uppercase;border:1px solid #57B8FF;cursor:pointer;margin-top:8px;border-radius:2px}
+.btn-gen{width:100%;padding:14px 0;background:#C8FF57;color:#0A0A0F;font-size:10px;letter-spacing:4px;text-transform:uppercase;border:none;cursor:pointer;font-weight:700;margin-top:10px;border-radius:2px}
+.btn-gen:disabled{background:#1A1A24;color:#6B6B88;cursor:not-allowed}
+.ta{width:100%;background:#0D0D0D;border:1px solid #252535;color:#F2F2F8;padding:11px;font-size:12px;resize:none;outline:none;border-radius:2px}
+.flash{position:fixed;bottom:88px;left:50%;transform:translateX(-50%);background:#C8FF57;color:#0A0A0F;padding:10px 22px;font-size:11px;letter-spacing:3px;font-weight:700;z-index:99;border-radius:3px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity 0.2s}
+.flash.show{opacity:1}
+.draftbanner{background:#57B8FF18;border:1px solid #57B8FF40;padding:11px 14px;display:flex;justify-content:space-between;align-items:center;border-radius:3px;margin-bottom:14px}
+.draftbanner span{font-size:10px;color:#57B8FF;letter-spacing:2px}
+.draftbanner button{background:none;border:none;color:#57B8FF;font-size:10px;cursor:pointer;letter-spacing:2px}
+.hist-item{border-bottom:1px solid #252535;padding:14px 0;cursor:pointer}
+.hist-date{font-size:9px;color:#6B6B88;letter-spacing:3px;text-transform:uppercase;margin-bottom:3px}
+.hist-name{font-size:20px;font-weight:700;letter-spacing:1px;margin-bottom:3px}
+.hist-meta{font-size:10px;color:#6B6B88;display:flex;justify-content:space-between}
+.hist-detail{background:#0D0D0D;border:1px solid #252535;padding:13px;margin-bottom:8px;border-radius:2px;display:none}
+.hist-detail.open{display:block}
+.hist-ex-title{font-size:11px;color:#C8FF57;margin:8px 0 3px;letter-spacing:1px}
+.hist-ex-set{font-size:10px;color:#6B6B88;padding-left:8px}
+.rm-table{width:100%;margin-top:6px;border-collapse:collapse}
+.rm-table th{font-size:8px;color:#6B6B88;letter-spacing:2px;text-transform:uppercase;padding:4px 6px;text-align:left;border-bottom:1px solid #252535}
+.rm-table td{font-size:11px;padding:5px 6px;border-bottom:1px solid #1A1A24}
+.rm-best{color:#C8FF57;font-weight:700}
+.feelrow{display:flex;gap:6px;margin-bottom:12px}
+.feelbtn{flex:1;padding:11px 0;font-size:20px;border:1px solid #252535;background:transparent;cursor:pointer;border-radius:2px}
+.feelbtn.active{border-color:#C8FF57;background:#C8FF5720}
+.statrow{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #252535}
+.stat-date{font-size:9px;color:#6B6B88;letter-spacing:2px}
+.stat-right{display:flex;align-items:center;gap:10px}
+.stat-weight{font-size:20px;font-weight:700}
+.stat-diff{font-size:9px;text-align:right}
+.diff-dn{color:#C8FF57}
+.diff-up{color:#FF5757}
+.pb-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #252535}
+.pb-val{font-size:20px;font-weight:700;color:#C8FF57}
+.plan-card{background:#1A1A24;border:1px solid #252535;padding:14px;margin-bottom:14px;border-radius:3px}
+.plan-day-name{font-size:20px;font-weight:700;color:#C8FF57;letter-spacing:2px;margin-bottom:12px}
+.plan-ex-row{border-bottom:1px solid #252535;padding:9px 0;display:flex;justify-content:space-between;align-items:center}
+.plan-ex-name{font-size:12px}
+.plan-ex-rpe{font-size:9px;color:#C8FF57;font-style:italic;margin-top:2px}
+.plan-ex-right{text-align:right}
+.plan-ex-sets{font-size:9px;color:#6B6B88}
+.plan-ex-pb{font-size:10px;color:#C8FF57;margin-top:2px}
+.plan-fin{margin-top:12px;padding-top:10px;border-top:1px solid #252535}
+.plan-fin-title{font-size:10px;color:#C8FF57;letter-spacing:3px;margin-bottom:5px}
+.plan-fin-meta{font-size:9px;color:#6B6B88;margin-bottom:6px}
+.plan-fin-ex{font-size:11px;color:#6B6B88;padding:2px 0}
+.wtabs{display:flex;gap:8px;margin-bottom:16px}
+.wtab{flex:1;padding:8px 0;font-size:9px;letter-spacing:2px;border:1px solid #252535;background:transparent;color:#6B6B88;cursor:pointer;border-radius:2px}
+.wtab.active{border-color:#C8FF57;background:#C8FF5718;color:#C8FF57}
+.wguide{font-size:10px;color:#6B6B88;margin-bottom:18px;line-height:1.8}
+.next-box{background:#C8FF5712;border:1px solid #C8FF5740;padding:14px;margin-top:4px;border-radius:3px;margin-bottom:4px}
+.next-title{font-size:10px;color:#C8FF57;letter-spacing:3px;margin-bottom:7px}
+.next-text{font-size:11px;color:#6B6B88;line-height:1.8}
+.section-title{font-size:9px;color:#6B6B88;letter-spacing:4px;text-transform:uppercase;margin:22px 0 10px}
+.empty{text-align:center;padding:48px 0;color:#6B6B88;font-size:11px;letter-spacing:2px;line-height:2}
+.day-sub{font-size:10px;color:#6B6B88;margin-bottom:16px;letter-spacing:2px}
+.rm-section{margin-top:20px;padding-top:16px;border-top:1px solid #252535}
+.rm-section-title{font-size:9px;color:#6B6B88;letter-spacing:4px;text-transform:uppercase;margin-bottom:12px}
+.rm-card{background:#1A1A24;border:1px solid #252535;padding:12px;margin-bottom:8px;border-radius:3px}
+.rm-ex-name{font-size:12px;font-weight:700;margin-bottom:8px}
+.rm-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.rm-cell{background:#0D0D0D;border:1px solid #252535;padding:8px;border-radius:2px;text-align:center}
+.rm-cell-lbl{font-size:8px;color:#6B6B88;letter-spacing:2px;margin-bottom:4px}
+.rm-cell-val{font-size:16px;font-weight:700;color:#C8FF57}
+.rm-cell-sub{font-size:8px;color:#6B6B88;margin-top:2px}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="flash" id="flash-msg"></div>
+  <div class="hdr">
+    <div class="badge" id="block-badge">Block 1 &middot; Fat Loss</div>
+    <div class="ttl">TRAIN<span class="ttl-dot">.</span></div>
+    <div class="sub" id="today-date"></div>
+  </div>
+  <div class="tabbar">
+    <button class="tabbtn active" onclick="goTab(0)">Session</button>
+    <button class="tabbtn" onclick="goTab(1)">Plan</button>
+    <button class="tabbtn" onclick="goTab(2)">History</button>
+    <button class="tabbtn" onclick="goTab(3)">Stats</button>
+  </div>
+
+  <!-- SESSION -->
+
+  <div class="section active" id="tab-0">
+    <div class="draftbanner" id="draft-banner" style="display:none">
+      <span>Draft restored &mdash; carry on</span>
+    </div>
+    <div class="lbl" style="margin-top:0">Select Day</div>
+    <div class="daytoggle">
+      <button class="daybtn active" id="btn-day-A" onclick="selectDay('A')">Day A</button>
+      <button class="daybtn" id="btn-day-B" onclick="selectDay('B')">Day B</button>
+    </div>
+    <div class="day-sub" id="day-subtitle"></div>
+    <div id="exercises-area"></div>
+    <div id="finisher-area"></div>
+    <div class="lbl">Session Notes</div>
+    <textarea class="ta" id="session-note" rows="3" placeholder="How did it feel?"></textarea>
+    <button class="btn-primary" onclick="saveSession()">Save Session</button>
+  </div>
+
+  <!-- PLAN -->
+
+  <div class="section" id="tab-1">
+    <div class="section-title" id="plan-heading">Block 1 &mdash; Your Plan</div>
+    <div class="wtabs">
+      <button class="wtab active" onclick="selectWeek(1)">W1</button>
+      <button class="wtab" onclick="selectWeek(2)">W2</button>
+      <button class="wtab" onclick="selectWeek(3)">W3</button>
+      <button class="wtab" onclick="selectWeek(4)">W4</button>
+    </div>
+    <div class="wguide" id="week-guide"></div>
+    <div id="plan-area"></div>
+    <div class="next-box">
+      <div class="next-title">NEXT BLOCK</div>
+      <div class="next-text">Complete 4 weeks then generate your next block. The AI analyses your logged weights and builds a fresh plan with new exercises automatically.</div>
+    </div>
+    <button class="btn-gen" id="gen-btn" onclick="generatePlan()">Generate Next 4-Week Block</button>
+  </div>
+
+  <!-- HISTORY -->
+
+  <div class="section" id="tab-2">
+    <div id="history-area"></div>
+    <div class="rm-section">
+      <div class="rm-section-title">Rep Max Bests</div>
+      <div style="font-size:10px;color:#6B6B88;margin-bottom:14px;line-height:1.8">Estimated from your best logged sets using the Epley formula. Updates automatically as you log more sessions.</div>
+      <div id="rm-area"></div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+
+  <div class="section" id="tab-3">
+    <div class="card">
+      <div style="font-size:11px;color:#C8FF57;letter-spacing:3px;margin-bottom:12px">LOG TODAY</div>
+      <div class="lbl" style="margin-top:0">Body Weight (kg)</div>
+      <input class="inp" type="number" id="stat-weight" placeholder="e.g. 82.5" style="width:100%;margin-bottom:4px">
+      <div class="lbl">How do you feel?</div>
+      <div class="feelrow" id="feel-row"></div>
+      <div class="lbl">Notes</div>
+      <textarea class="ta" id="stat-note" rows="2" placeholder="Clothes fitting better? Energy? Sleep?"></textarea>
+      <button class="btn-primary" onclick="saveStat()">Log Stats</button>
+    </div>
+    <div id="stats-area"></div>
+    <div id="pb-area"></div>
+  </div>
+</div>
+
+<script>
+var STORAGE_KEY = 'train_v5';
+var FEELS = ['😩','😕','😐','😊','💪'];
+var WEEK_GUIDES = [
+  'Week 1 — Foundation. Focus on form and technique.',
+  'Week 2 — Build. Add small amounts of weight where you can.',
+  'Week 3 — Push. Higher intensity, chase the reps.',
+  'Week 4 — Consolidate. Test your bests before the next block.'
+];
+
+var DEFAULT_PLAN = {
+  A: {
+    name: 'Day A — Push & Pull',
+    exercises: [
+      {name:'Barbell Back Squat', sets:3, reps:'8', rpe:'7/10 — controlled depth'},
+      {name:'Dumbbell Bench Press', sets:3, reps:'10', rpe:'Leave 2 reps in tank'},
+      {name:'Cable Row (Seated)', sets:3, reps:'10', rpe:'Full stretch, controlled pull'},
+      {name:'Dumbbell Shoulder Press', sets:3, reps:'10', rpe:'No arching lower back'},
+      {name:'Romanian Deadlift', sets:3, reps:'10', rpe:'Light-moderate, hinge well'},
+      {name:'Plank', sets:3, reps:'45s', rpe:'Brace hard, neutral spine'}
+    ],
+    finisher: {
+      name: 'The Burner',
+      duration: '12 mins',
+      rest: '90 sec rest between rounds',
+      rounds: 3,
+      exercises: [
+        {name:'Ski Erg', detail:'250m per round'},
+        {name:'Burpee Broad Jumps', detail:'10 reps — explosive jump forward'},
+        {name:'Farmers Carry', detail:'40m — as heavy as posture allows'}
+      ]
+    }
+  },
+  B: {
+    name: 'Day B — Hinge & Pull',
+    exercises: [
+      {name:'Conventional Deadlift', sets:3, reps:'6', rpe:'Moderate — perfect form priority'},
+      {name:'Incline Dumbbell Press', sets:3, reps:'10', rpe:'30-45 degrees, controlled'},
+      {name:'Pull-Ups / Lat Pulldown', sets:3, reps:'10', rpe:'Full hang, squeeze at top'},
+      {name:'Goblet Squat', sets:3, reps:'12', rpe:'Lighter than Day A squats'},
+      {name:'Cable Lateral Raise', sets:3, reps:'12', rpe:'Slow eccentric — 3 sec down'},
+      {name:'Dead Bug', sets:3, reps:'8 each', rpe:'Lower back flat — always'}
+    ],
+    finisher: {
+      name: 'The Grind',
+      duration: '12 mins',
+      rest: '90 sec rest between rounds',
+      rounds: 3,
+      exercises: [
+        {name:'Rowing Machine', detail:'250m per round — strong drive'},
+        {name:'Wall Balls', detail:'15 reps — 6-9kg ball, full squat'},
+        {name:'Sled Push or Pull', detail:'20m — moderate load, fast feet'}
+      ]
+    }
+  }
+};
+
+// Seed session — first session this week
+var SEED_SESSION = {
+  id: 1746650400000,
+  date: '2026-05-06T07:00:00.000Z',
+  day: 'A',
+  dayName: 'Day A — Push & Pull',
+  sets: {
+    'Barbell Back Squat':      {0:{w:'40',r:'8'}, 1:{w:'40',r:'8'}, 2:{w:'40',r:'8'}},
+    'Dumbbell Bench Press':    {0:{w:'15',r:'10'}, 1:{w:'15',r:'10'}, 2:{w:'15',r:'10'}},
+    'Cable Row (Seated)':      {0:{w:'15',r:'10'}, 1:{w:'15',r:'10'}, 2:{w:'15',r:'10'}},
+    'Dumbbell Shoulder Press': {0:{w:'23',r:'10'}, 1:{w:'23',r:'10'}, 2:{w:'23',r:'10'}},
+    'Romanian Deadlift':       {0:{w:'40',r:'10'}, 1:{w:'40',r:'10'}, 2:{w:'40',r:'10'}}
+  },
+  fins: {
+    'Farmers Carry': {w:'16kg', r:'40m'}
+  },
+  finDone: true,
+  note: 'First session back. Kept it controlled, all reps completed.',
+  block: 1
+};
+
+function loadState() {
+  try {
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      var parsed = JSON.parse(raw);
+      // Inject seed session if not already present
+      var hasSeed = false;
+      for (var i = 0; i < parsed.logs.length; i++) {
+        if (parsed.logs[i].id === SEED_SESSION.id) { hasSeed = true; break; }
+      }
+      if (!hasSeed) { parsed.logs.push(SEED_SESSION); }
+      return parsed;
+    }
+  } catch(e) {}
+  return {
+    logs: [SEED_SESSION],
+    stats: [],
+    plan: JSON.parse(JSON.stringify(DEFAULT_PLAN)),
+    block: 1,
+    draft: null
+  };
+}
+
+var appState = loadState();
+var currentDay = 'A';
+var setInputs = {};
+var finInputs = {};
+var finChecked = false;
+var currentFeel = '3';
+var activeWeek = 1;
+
+function persist() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(appState)); } catch(e) {}
+}
+
+function saveDraft() {
+  var noteEl = document.getElementById('session-note');
+  appState.draft = {
+    day: currentDay,
+    sets: JSON.parse(JSON.stringify(setInputs)),
+    fins: JSON.parse(JSON.stringify(finInputs)),
+    checked: finChecked,
+    note: noteEl ? noteEl.value : ''
+  };
+  persist();
+}
+
+function showFlash(msg) {
+  var el = document.getElementById('flash-msg');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(function() { el.classList.remove('show'); }, 2500);
+}
+
+function niceDate(iso) {
+  return new Date(iso).toLocaleDateString('en-GB', {weekday:'long', day:'numeric', month:'short'});
+}
+
+// Epley formula: 1RM = w * (1 + r/30)
+function epley(w, r) {
+  w = parseFloat(w); r = parseInt(r);
+  if (isNaN(w) || isNaN(r) || w <= 0 || r <= 0) { return null; }
+  if (r === 1) { return w; }
+  return Math.round(w * (1 + r / 30) * 10) / 10;
+}
+
+// From 1RM, estimate weight for target reps
+function fromRM(oneRM, targetReps) {
+  if (targetReps === 1) { return oneRM; }
+  return Math.round(oneRM / (1 + targetReps / 30) * 10) / 10;
+}
+
+// Get best estimated 1RM per exercise across all logs
+function getBestRMs() {
+  var bests = {}; // exName -> {oneRM, w, r}
+  for (var i = 0; i < appState.logs.length; i++) {
+    var l = appState.logs[i];
+    if (!l.sets) { continue; }
+    var exKeys = Object.keys(l.sets);
+    for (var ei = 0; ei < exKeys.length; ei++) {
+      var ex = exKeys[ei];
+      var sKeys = Object.keys(l.sets[ex]);
+      for (var si = 0; si < sKeys.length; si++) {
+        var sv = l.sets[ex][sKeys[si]];
+        var rm = epley(sv.w, sv.r);
+        if (rm !== null) {
+          if (!bests[ex] || rm > bests[ex].oneRM) {
+            bests[ex] = {oneRM: rm, w: parseFloat(sv.w), r: parseInt(sv.r)};
+          }
+        }
+      }
+    }
+  }
+  return bests;
+}
+
+function getPBs() {
+  var bests = {};
+  for (var i = 0; i < appState.logs.length; i++) {
+    var l = appState.logs[i];
+    if (!l.sets) { continue; }
+    var exKeys = Object.keys(l.sets);
+    for (var ei = 0; ei < exKeys.length; ei++) {
+      var ex = exKeys[ei];
+      var sKeys = Object.keys(l.sets[ex]);
+      for (var si = 0; si < sKeys.length; si++) {
+        var w = parseFloat(l.sets[ex][sKeys[si]].w);
+        if (!isNaN(w) && w > 0 && (!bests[ex] || w > bests[ex])) { bests[ex] = w; }
+      }
+    }
+  }
+  return bests;
+}
+
+// ── TABS ──────────────────────────────────────────────────────────────────────
+function goTab(i) {
+  var sections = document.querySelectorAll('.section');
+  var tabs = document.querySelectorAll('.tabbtn');
+  for (var j = 0; j < sections.length; j++) {
+    sections[j].classList.toggle('active', j === i);
+    tabs[j].classList.toggle('active', j === i);
+  }
+  if (i === 1) { renderPlan(); }
+  if (i === 2) { renderHistory(); }
+  if (i === 3) { renderStats(); }
+}
+
+// ── SESSION ───────────────────────────────────────────────────────────────────
+function selectDay(d) {
+  currentDay = d;
+  setInputs = {}; finInputs = {}; finChecked = false;
+  document.getElementById('btn-day-A').classList.toggle('active', d === 'A');
+  document.getElementById('btn-day-B').classList.toggle('active', d === 'B');
+  renderSession();
+  saveDraft();
+}
+
+function renderSession() {
+  var plan = appState.plan[currentDay];
+  var bests = getPBs();
+  var i, ex, html, rows, bestHtml, wv, rv;
+  document.getElementById('day-subtitle').textContent = plan.name;
+
+  html = '';
+  for (i = 0; i < plan.exercises.length; i++) {
+    ex = plan.exercises[i];
+    bestHtml = bests[ex.name] ? '<div class="best-box"><div class="best-lbl">BEST</div><div class="best-val">' + bests[ex.name] + 'kg</div></div>' : '';
+    rows = '';
+    for (var s = 0; s < ex.sets; s++) {
+      wv = (setInputs[ex.name] && setInputs[ex.name][s]) ? (setInputs[ex.name][s].w || '') : '';
+      rv = (setInputs[ex.name] && setInputs[ex.name][s]) ? (setInputs[ex.name][s].r || '') : '';
+      rows += '<div class="setrow"><span class="setnum">S' + (s+1) + '</span>'
+        + '<input class="inp" type="number" placeholder="kg" value="' + wv + '" oninput="updateSet(\'' + ex.name + '\',' + s + ',\'w\',this.value)">'
+        + '<input class="inp" type="number" placeholder="reps" value="' + rv + '" oninput="updateSet(\'' + ex.name + '\',' + s + ',\'r\',this.value)">'
+        + '</div>';
+    }
+    html += '<div class="card"><div class="ex-top"><div style="flex:1;padding-right:8px">'
+      + '<div class="ex-name">' + ex.name + '</div>'
+      + '<div class="ex-meta">' + ex.sets + ' sets &times; ' + ex.reps + ' reps</div>'
+      + '<div class="ex-rpe">' + ex.rpe + '</div></div>' + bestHtml + '</div>' + rows + '</div>';
+  }
+  document.getElementById('exercises-area').innerHTML = html;
+
+  var fin = plan.finisher;
+  var fhtml = '<div class="fincard"><div class="fin-top"><div class="fin-title">FINISHER: ' + fin.name + '</div>'
+    + '<div class="fin-meta">' + fin.rounds + ' rounds<br>' + fin.duration + '<br>' + fin.rest + '</div></div>';
+  for (i = 0; i < fin.exercises.length; i++) {
+    ex = fin.exercises[i];
+    wv = (finInputs[ex.name] && finInputs[ex.name].w) ? finInputs[ex.name].w : '';
+    rv = (finInputs[ex.name] && finInputs[ex.name].r) ? finInputs[ex.name].r : '';
+    fhtml += '<div class="finex"><div class="finex-name">' + ex.name + '</div>'
+      + '<div class="finex-detail">' + ex.detail + '</div>'
+      + '<div class="finrow">'
+      + '<input class="inp" type="text" placeholder="Weight/load" value="' + wv + '" oninput="updateFin(\'' + ex.name + '\',\'w\',this.value)">'
+      + '<input class="inp" type="text" placeholder="Reps/dist" value="' + rv + '" oninput="updateFin(\'' + ex.name + '\',\'r\',this.value)">'
+      + '</div></div>';
+  }
+  fhtml += '<div class="fincheck"><input type="checkbox" id="fin-check" ' + (finChecked ? 'checked' : '') + ' onchange="finChecked=this.checked;saveDraft()"><label for="fin-check">Finisher completed</label></div></div>';
+  document.getElementById('finisher-area').innerHTML = fhtml;
+}
+
+function updateSet(exName, setIdx, field, val) {
+  if (!setInputs[exName]) { setInputs[exName] = {}; }
+  if (!setInputs[exName][setIdx]) { setInputs[exName][setIdx] = {}; }
+  setInputs[exName][setIdx][field] = val;
+  saveDraft();
+}
+
+function updateFin(exName, field, val) {
+  if (!finInputs[exName]) { finInputs[exName] = {}; }
+  finInputs[exName][field] = val;
+  saveDraft();
+}
+
+function saveSession() {
+  var noteEl = document.getElementById('session-note');
+  var entry = {
+    id: Date.now(),
+    date: new Date().toISOString(),
+    day: currentDay,
+    dayName: appState.plan[currentDay].name,
+    sets: JSON.parse(JSON.stringify(setInputs)),
+    fins: JSON.parse(JSON.stringify(finInputs)),
+    finDone: finChecked,
+    note: noteEl ? noteEl.value : '',
+    block: appState.block
+  };
+  appState.logs.unshift(entry);
+  appState.draft = null;
+  persist();
+  setInputs = {}; finInputs = {}; finChecked = false;
+  if (noteEl) { noteEl.value = ''; }
+  renderSession();
+  showFlash('Session saved');
+}
+
+// ── PLAN ──────────────────────────────────────────────────────────────────────
+function selectWeek(w) {
+  activeWeek = w;
+  var tabs = document.querySelectorAll('.wtab');
+  for (var i = 0; i < tabs.length; i++) { tabs[i].classList.toggle('active', i + 1 === w); }
+  var guide = document.getElementById('week-guide');
+  if (guide) { guide.textContent = WEEK_GUIDES[w - 1]; }
+}
+
+function renderPlan() {
+  var bests = getPBs();
+  var planHead = document.getElementById('plan-heading');
+  if (planHead) { planHead.textContent = 'Block ' + appState.block + ' — Your Plan'; }
+  var guide = document.getElementById('week-guide');
+  if (guide) { guide.textContent = WEEK_GUIDES[activeWeek - 1]; }
+  var html = '';
+  var days = ['A','B'];
+  for (var di = 0; di < days.length; di++) {
+    var d = days[di];
+    var plan = appState.plan[d];
+    var exRows = '';
+    for (var i = 0; i < plan.exercises.length; i++) {
+      var ex = plan.exercises[i];
+      exRows += '<div class="plan-ex-row"><div><div class="plan-ex-name">' + ex.name + '</div><div class="plan-ex-rpe">' + ex.rpe + '</div></div>'
+        + '<div class="plan-ex-right"><div class="plan-ex-sets">' + ex.sets + 'x' + ex.reps + '</div>'
+        + (bests[ex.name] ? '<div class="plan-ex-pb">PB ' + bests[ex.name] + 'kg</div>' : '') + '</div></div>';
+    }
+    var finRows = '';
+    for (var fi = 0; fi < plan.finisher.exercises.length; fi++) {
+      finRows += '<div class="plan-fin-ex">&bull; ' + plan.finisher.exercises[fi].name + ' &mdash; ' + plan.finisher.exercises[fi].detail + '</div>';
+    }
+    html += '<div class="plan-card"><div class="plan-day-name">' + plan.name + '</div>' + exRows
+      + '<div class="plan-fin"><div class="plan-fin-title">FINISHER: ' + plan.finisher.name + '</div>'
+      + '<div class="plan-fin-meta">' + plan.finisher.rounds + ' rounds &middot; ' + plan.finisher.duration + ' &middot; ' + plan.finisher.rest + '</div>'
+      + finRows + '</div></div>';
+  }
+  var planArea = document.getElementById('plan-area');
+  if (planArea) { planArea.innerHTML = html; }
+}
+
+function generatePlan() {
+  var btn = document.getElementById('gen-btn');
+  btn.disabled = true; btn.textContent = 'Generating...';
+  var summary = [];
+  var maxLogs = Math.min(appState.logs.length, 8);
+  for (var li = 0; li < maxLogs; li++) {
+    var l = appState.logs[li];
+    var exArr = [];
+    var setKeys = Object.keys(l.sets || {});
+    for (var ei = 0; ei < setKeys.length; ei++) {
+      var exName = setKeys[ei];
+      var setArr = [];
+      var sKeys = Object.keys(l.sets[exName]);
+      for (var si = 0; si < sKeys.length; si++) {
+        var sv = l.sets[exName][sKeys[si]];
+        setArr.push((sv.w || '?') + 'kg x ' + (sv.r || '?'));
+      }
+      exArr.push({name: exName, sets: setArr});
+    }
+    summary.push({day: l.day, exercises: exArr});
+  }
+  var prevA = appState.plan.A.exercises.map(function(e) { return e.name; }).join(', ');
+  var prevB = appState.plan.B.exercises.map(function(e) { return e.name; }).join(', ');
+  var prompt = 'You are an S&C coach. Generate a new 4-week gym training plan.\n'
+    + 'Goals: fat loss and lean muscle.\n'
+    + 'Considerations: lower back issues — avoid heavy axial loading, include core stability work.\n'
+    + 'Equipment: full gym (barbells, dumbbells, cables, machines, ski erg, rower, sled).\n'
+    + 'Format: 2 sessions per week, full body each session.\n'
+    + 'Each session needs exactly 6 exercises plus a Hyrox-style finisher with 3 exercises.\n'
+    + 'Previous Day A exercises: ' + prevA + '\n'
+    + 'Previous Day B exercises: ' + prevB + '\n'
+    + 'Recent performance data: ' + JSON.stringify(summary) + '\n'
+    + 'Rules: introduce at least 3 new exercise variations not used before. Apply progressive overload from the logged weights. Rep ranges: 10-15 for accessories, 6-10 for compounds.\n'
+    + 'Return ONLY a valid JSON object, no markdown, no explanation:\n'
+    + '{"A":{"name":"Day A — Theme","exercises":[{"name":"Exercise Name","sets":3,"reps":"10","rpe":"coaching cue"}],"finisher":{"name":"Finisher Name","duration":"12 mins","rest":"90 sec between rounds","rounds":3,"exercises":[{"name":"Exercise","detail":"detail"}]}},"B":{"name":"Day B — Theme","exercises":[{"name":"Exercise Name","sets":3,"reps":"10","rpe":"coaching cue"}],"finisher":{"name":"Finisher Name","duration":"12 mins","rest":"90 sec between rounds","rounds":3,"exercises":[{"name":"Exercise","detail":"detail"}]}}}';
+
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({model:'claude-sonnet-4-20250514', max_tokens:1200, messages:[{role:'user', content:prompt}]})
+  })
+  .then(function(res) { return res.json(); })
+  .then(function(data) {
+    var text = '';
+    var parts = data.content || [];
+    for (var i = 0; i < parts.length; i++) { text += (parts[i].text || ''); }
+    text = text.replace(/```json/g,'').replace(/```/g,'').trim();
+    var newPlan = JSON.parse(text);
+    appState.plan = newPlan;
+    appState.block = appState.block + 1;
+    persist();
+    document.getElementById('block-badge').textContent = 'Block ' + appState.block + ' \u00b7 Fat Loss';
+    renderPlan();
+    showFlash('New block generated!');
+  })
+  .catch(function() { showFlash('Failed — please try again'); })
+  .finally(function() { btn.disabled = false; btn.textContent = 'Generate Next 4-Week Block'; });
+}
+
+// ── HISTORY ───────────────────────────────────────────────────────────────────
+function renderHistory() {
+  var area = document.getElementById('history-area');
+  if (!appState.logs.length) {
+    area.innerHTML = '<div class="empty">No sessions yet.<br>Get after it.</div>';
+  } else {
+    var html = '';
+    for (var i = 0; i < appState.logs.length; i++) {
+      var l = appState.logs[i];
+      var exCount = Object.keys(l.sets || {}).length;
+      html += '<div class="hist-item" onclick="toggleHist(' + l.id + ')">'
+        + '<div class="hist-date">' + niceDate(l.date) + (l.block ? ' &middot; Block ' + l.block : '') + '</div>'
+        + '<div class="hist-name">' + l.dayName + '</div>'
+        + '<div class="hist-meta"><span>' + exCount + ' exercises' + (l.finDone ? ' &middot; Finisher done' : '') + '</span>'
+        + '<span style="color:#C8FF57" id="arr-' + l.id + '">&#9660;</span></div></div>'
+        + '<div class="hist-detail" id="hd-' + l.id + '">' + buildHistDetail(l) + '</div>';
+    }
+    area.innerHTML = html;
+  }
+
+  // Rep max bests section
+  renderRMBests();
+}
+
+function buildHistDetail(l) {
+  var html = '';
+  var exKeys = Object.keys(l.sets || {});
+  for (var ei = 0; ei < exKeys.length; ei++) {
+    var ex = exKeys[ei];
+    html += '<div class="hist-ex-title">' + ex + '</div>';
+    var sKeys = Object.keys(l.sets[ex]);
+    for (var si = 0; si < sKeys.length; si++) {
+      var sv = l.sets[ex][sKeys[si]];
+      html += '<div class="hist-ex-set">Set ' + (parseInt(sKeys[si])+1) + ': ' + (sv.w||'—') + 'kg &times; ' + (sv.r||'—') + ' reps</div>';
+    }
+  }
+  var finKeys = Object.keys(l.fins || {});
+  if (finKeys.length) {
+    html += '<div class="hist-ex-title" style="margin-top:10px">FINISHER</div>';
+    for (var fi = 0; fi < finKeys.length; fi++) {
+      var fex = finKeys[fi];
+      var fs = l.fins[fex];
+      html += '<div class="hist-ex-set">' + fex + ': ' + (fs.w||'—') + ' &middot; ' + (fs.r||'—') + '</div>';
+    }
+  }
+  if (l.note) { html += '<div style="font-size:10px;color:#6B6B88;margin-top:8px;font-style:italic">&ldquo;' + l.note + '&rdquo;</div>'; }
+  html += '<button class="btn-blue" onclick="exportTCX(' + l.id + ')">Export to Training Peaks (.tcx)</button>';
+  return html;
+}
+
+function renderRMBests() {
+  var rmArea = document.getElementById('rm-area');
+  if (!rmArea) { return; }
+  var bests = getBestRMs();
+  var keys = Object.keys(bests);
+  if (!keys.length) {
+    rmArea.innerHTML = '<div style="font-size:11px;color:#6B6B88">Log some sessions to see your rep max estimates here.</div>';
+    return;
+  }
+  var html = '';
+  for (var i = 0; i < keys.length; i++) {
+    var ex = keys[i];
+    var b = bests[ex];
+    var rm1 = b.oneRM;
+    var rm3 = fromRM(rm1, 3);
+    var rm10 = fromRM(rm1, 10);
+    html += '<div class="rm-card">'
+      + '<div class="rm-ex-name">' + ex + '</div>'
+      + '<div style="font-size:9px;color:#6B6B88;margin-bottom:8px">Based on best logged set: ' + b.w + 'kg &times; ' + b.r + ' reps</div>'
+      + '<div class="rm-grid">'
+      + '<div class="rm-cell"><div class="rm-cell-lbl">1RM</div><div class="rm-cell-val">' + rm1 + '</div><div class="rm-cell-sub">kg est.</div></div>'
+      + '<div class="rm-cell"><div class="rm-cell-lbl">3RM</div><div class="rm-cell-val">' + rm3 + '</div><div class="rm-cell-sub">kg est.</div></div>'
+      + '<div class="rm-cell"><div class="rm-cell-lbl">10RM</div><div class="rm-cell-val">' + rm10 + '</div><div class="rm-cell-sub">kg est.</div></div>'
+      + '</div></div>';
+  }
+  rmArea.innerHTML = html;
+}
+
+function toggleHist(id) {
+  var detail = document.getElementById('hd-' + id);
+  var arrow = document.getElementById('arr-' + id);
+  if (!detail) { return; }
+  var isOpen = detail.classList.contains('open');
+  detail.classList.toggle('open', !isOpen);
+  if (arrow) { arrow.innerHTML = isOpen ? '&#9660;' : '&#9650;'; }
+}
+
+function exportTCX(id) {
+  var l = null;
+  for (var i = 0; i < appState.logs.length; i++) { if (appState.logs[i].id === id) { l = appState.logs[i]; break; } }
+  if (!l) { return; }
+  var dt = new Date(l.date).toISOString();
+  var acts = '';
+  var exKeys = Object.keys(l.sets || {});
+  for (var ei = 0; ei < exKeys.length; ei++) {
+    var ex = exKeys[ei];
+    var sKeys = Object.keys(l.sets[ex]);
+    for (var si = 0; si < sKeys.length; si++) {
+      var sv = l.sets[ex][sKeys[si]];
+      if (sv.w || sv.r) {
+        acts += '<Activity Sport="Other"><Id>' + dt + '</Id><Lap StartTime="' + dt + '"><TotalTimeSeconds>60</TotalTimeSeconds>'
+          + '<Notes>' + ex + ' Set ' + (parseInt(sKeys[si])+1) + ': ' + (sv.w||'?') + 'kg x ' + (sv.r||'?') + ' reps</Notes>'
+          + '<Intensity>Active</Intensity><TriggerMethod>Manual</TriggerMethod></Lap></Activity>';
+      }
+    }
+  }
+  var tcx = '<?xml version="1.0" encoding="UTF-8"?><TrainingCenterDatabase xmlns="http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2"><Activities>' + acts + '</Activities></TrainingCenterDatabase>';
+  var blob = new Blob([tcx], {type:'application/xml'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = 'session_' + new Date(l.date).toISOString().slice(0,10) + '.tcx'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ── STATS ─────────────────────────────────────────────────────────────────────
+function renderStats() {
+  var feelRow = document.getElementById('feel-row');
+  var fhtml = '';
+  for (var i = 0; i < FEELS.length; i++) {
+    fhtml += '<button class="feelbtn' + (currentFeel === String(i+1) ? ' active' : '') + '" onclick="pickFeel(' + (i+1) + ')">' + FEELS[i] + '</button>';
+  }
+  if (feelRow) { feelRow.innerHTML = fhtml; }
+
+  var statsArea = document.getElementById('stats-area');
+  var shtml = '';
+  if (appState.stats.length) {
+    shtml += '<div class="section-title">Weight Trend</div>';
+    var shown = Math.min(appState.stats.length, 10);
+    for (var si = 0; si < shown; si++) {
+      var st = appState.stats[si];
+      var prev = appState.stats[si+1];
+      var diffHtml = '';
+      if (prev) {
+        var diff = (parseFloat(st.w) - parseFloat(prev.w)).toFixed(1);
+        var cls = parseFloat(diff) < 0 ? 'diff-dn' : 'diff-up';
+        var arr = parseFloat(diff) < 0 ? '&#9660;' : '&#9650;';
+        diffHtml = '<div class="stat-diff ' + cls + '">' + arr + ' ' + Math.abs(diff) + 'kg</div>';
+      }
+      shtml += '<div class="statrow"><div><div class="stat-date">' + new Date(st.date).toLocaleDateString('en-GB',{day:'numeric',month:'short'}) + '</div>'
+        + (st.note ? '<div style="font-size:9px;color:#6B6B88;font-style:italic">' + st.note + '</div>' : '') + '</div>'
+        + '<div class="stat-right"><span style="font-size:20px">' + FEELS[parseInt(st.feel)-1] + '</span>'
+        + '<div><div class="stat-weight">' + st.w + 'kg</div>' + diffHtml + '</div></div></div>';
+    }
+  }
+  if (statsArea) { statsArea.innerHTML = shtml; }
+
+  var pbArea = document.getElementById('pb-area');
+  var bests = getPBs();
+  var pbKeys = Object.keys(bests);
+  var phtml = '';
+  if (pbKeys.length) {
+    phtml += '<div class="section-title">Personal Bests</div>';
+    for (var pi = 0; pi < pbKeys.length; pi++) {
+      phtml += '<div class="pb-row"><span>' + pbKeys[pi] + '</span><span class="pb-val">' + bests[pbKeys[pi]] + 'kg</span></div>';
+    }
+  }
+  if (pbArea) { pbArea.innerHTML = phtml; }
+}
+
+function pickFeel(i) {
+  currentFeel = String(i);
+  var btns = document.querySelectorAll('.feelbtn');
+  for (var j = 0; j < btns.length; j++) { btns[j].classList.toggle('active', j+1 === i); }
+}
+
+function saveStat() {
+  var wEl = document.getElementById('stat-weight');
+  var nEl = document.getElementById('stat-note');
+  if (!wEl || !wEl.value) { return; }
+  appState.stats.unshift({id:Date.now(), date:new Date().toISOString(), w:wEl.value, feel:currentFeel, note: nEl ? nEl.value : ''});
+  persist();
+  wEl.value = ''; if (nEl) { nEl.value = ''; }
+  renderStats();
+  showFlash('Stats logged');
+}
+
+// ── BOOT ──────────────────────────────────────────────────────────────────────
+(function init() {
+  var dateEl = document.getElementById('today-date');
+  if (dateEl) { dateEl.textContent = new Date().toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'}); }
+  var badgeEl = document.getElementById('block-badge');
+  if (badgeEl) { badgeEl.textContent = 'Block ' + appState.block + ' \u00b7 Fat Loss'; }
+
+  if (appState.draft) {
+    currentDay = appState.draft.day || 'A';
+    setInputs = appState.draft.sets || {};
+    finInputs = appState.draft.fins || {};
+    finChecked = appState.draft.checked || false;
+    var noteEl = document.getElementById('session-note');
+    if (noteEl && appState.draft.note) { noteEl.value = appState.draft.note; }
+    var hasDraft = Object.keys(setInputs).length > 0 || finChecked;
+    var banner = document.getElementById('draft-banner');
+    if (banner && hasDraft) { banner.style.display = 'flex'; }
+  }
+
+  document.getElementById('btn-day-A').classList.toggle('active', currentDay === 'A');
+  document.getElementById('btn-day-B').classList.toggle('active', currentDay === 'B');
+  var noteEl2 = document.getElementById('session-note');
+  if (noteEl2) { noteEl2.addEventListener('input', saveDraft); }
+  renderSession();
+})();
+</script>
+
+</body>
+</html>
